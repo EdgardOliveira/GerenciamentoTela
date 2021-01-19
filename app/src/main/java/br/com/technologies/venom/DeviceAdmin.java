@@ -11,12 +11,12 @@ public class DeviceAdmin extends DeviceAdminReceiver {
 
     public void onEnabled(Context context, Intent intent){
         super.onEnabled(context, intent);
-        Toast.makeText(context, "Enabled", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Habilitado", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onDisabled(@NonNull Context context, @NonNull Intent intent) {
         super.onDisabled(context, intent);
-        Toast.makeText(context, "Disabled", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Desabilitado", Toast.LENGTH_SHORT).show();
     }
 }
