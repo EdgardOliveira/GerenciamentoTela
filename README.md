@@ -10,7 +10,7 @@ App desenvolvido para fazer a demonstração de como gerenciar uma tela (Ligar e
 
 # Referências
 	Developer Android
-	https://tropicalfruitandveg.com/api/tfvrestapi2.pdf
+	https://developer.android.com/reference
 
 <img src="https://github.com/EdgardOliveira/GerenciamentoTela/blob/main/imagens/tela.gif" alt="git"  height="500" width="300">
 <img src="https://github.com/EdgardOliveira/GerenciamentoTela/blob/main/imagens/permissoes.png" alt="permissoes"  height="500" width="300">
