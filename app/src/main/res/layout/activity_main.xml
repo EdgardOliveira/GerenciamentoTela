@@ -7,20 +7,20 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/btnOn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ON"
+        android:id="@+id/btnGerenciar"
+        android:layout_width="165dp"
+        android:layout_height="75dp"
+        android:text="Habilitar o gerenciamento da tela"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btnOff"
+        android:id="@+id/btnDesligar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="OFF"
+        android:text="Desligar a tela"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline"

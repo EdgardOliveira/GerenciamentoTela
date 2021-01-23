@@ -15,10 +15,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final int LIGAR_TELA = 1;
+    private static final int LIGAR_TELA = 10001;
     private DevicePolicyManager devicePolicyManager;
     private ComponentName componentName;
-    private Button btnOn, btnOff;
+    private Button btnGerenciar, btnDesligar;
     private boolean ativo;
 
     @Override
@@ -26,41 +26,66 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnOff = findViewById(R.id.btnOff);
-        btnOn = findViewById(R.id.btnOn);
+        //Associando componentes à variáveis
+        btnDesligar = findViewById(R.id.btnDesligar);
+        btnGerenciar = findViewById(R.id.btnGerenciar);
 
+        gerenciarTela();
+
+        //Escutando por eventos de click
+        btnGerenciar.setOnClickListener(this);
+        btnDesligar.setOnClickListener(this);
+    }
+
+    /**
+     * Objetivo: Verificar e Fazer o gerenciamento da tela pelo app de acordo com a vontade do usuário
+     */
+    private void gerenciarTela() {
+        //Configurando o gerenciador de diretivas do dispositivo
         devicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
         componentName = new ComponentName(this, DeviceAdmin.class);
+        //Verifica o status do gerenciamento da tela
         ativo = devicePolicyManager.isAdminActive(componentName);
 
         if (ativo) {
-            btnOn.setText("Desativar tela");
-            btnOff.setVisibility(View.VISIBLE);
+            removerDireitoGerenciamentoTela();
         } else {
-            btnOn.setText("Ativar tela");
-            btnOff.setVisibility(View.GONE);
-        }
-
-        btnOn.setOnClickListener(this);
-        btnOff.setOnClickListener(this);
-    }
-
-    private void ligarTela(View view) {
-        ativo = devicePolicyManager.isAdminActive(componentName);
-
-        if (ativo) {
-            devicePolicyManager.removeActiveAdmin(componentName);
-            btnOn.setText("Ativar tela");
-            btnOff.setVisibility(View.GONE);
-        } else {
-            Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
-            intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, componentName);
-            intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "Você deve habilitar o app!");
-            startActivityForResult(intent, LIGAR_TELA);
+            adicionarDireitoGerenciamentoTela();
         }
     }
 
-    private void desligarTela(View view) {
+    private void removerDireitoGerenciamentoTela() {
+        //atualmente está permitido o gerenciamento pelo app... então irá remover a permissão
+        devicePolicyManager.removeActiveAdmin(componentName);
+        //configura o botão de gerenciamento para exibir Permitir... e esconde o desligar
+        configurarBtnGerenciamento(false);
+    }
+
+    private void configurarBtnGerenciamento(boolean status) {
+        if (status) {
+            //permitiu o gerenciamento pelo app
+            btnGerenciar.setText("Desabilitar o gerenciamento da tela");
+            //Exibe o botão para permitir desligar a tela
+            btnDesligar.setVisibility(View.VISIBLE);
+        } else {
+            //Não está permitido o gerenciamento pelo app
+            btnGerenciar.setText("Habilitar o gerenciamento da tela");
+            //Esconde o botão de desligar a tela
+            btnDesligar.setVisibility(View.GONE);
+        }
+
+    }
+
+    private void adicionarDireitoGerenciamentoTela() {
+        Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+        intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, componentName);
+        intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "Você deve permitir o gerenciamento da tela pelo app!");
+        startActivityForResult(intent, LIGAR_TELA);
+
+        configurarBtnGerenciamento(true);
+    }
+
+    private void desligarTela() {
         devicePolicyManager.lockNow();
     }
 
@@ -71,11 +96,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (requestCode) {
             case LIGAR_TELA:
                 if (resultCode == RESULT_OK) {
-                    btnOn.setText("Desativar tela");
-                    btnOff.setVisibility(View.VISIBLE);
+                    configurarBtnGerenciamento(true);
                 } else {
                     Toast.makeText(
-                            getApplicationContext(), "Falhou!",
+                            getApplicationContext(), "Falhou ao tentar gerenciar a tela!",
                             Toast.LENGTH_SHORT
                     ).show();
                 }
@@ -86,11 +110,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnOn:
-                ligarTela(v);
+            case R.id.btnGerenciar:
+                gerenciarTela();
                 break;
-            case R.id.btnOff:
-                desligarTela(v);
+            case R.id.btnDesligar:
+                desligarTela();
                 break;
         }
     }
